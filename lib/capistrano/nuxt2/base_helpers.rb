@@ -5,6 +5,12 @@ module Capistrano
   module Recipes2go
     module BaseHelpers
 
+      def build_deploy_env_var
+        app_name = fetch(:application).gsub(/ /,'_').gsub(/-/,'_').upcase
+        stage_name = fetch(:stage) == 'production' ? 'PROD' : 'STG'
+        "#{ app_name }_#{ stage_name }_DEPLOY_MODE"
+      end
+
       ## PAth helpers
       def ensure_shared_path(path)
         unless test("[ -d #{path} ]")
