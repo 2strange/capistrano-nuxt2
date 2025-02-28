@@ -1,5 +1,5 @@
-require 'capistrano/recipes2go/base_helpers'
-include Capistrano::Recipes2go::BaseHelpers
+require 'capistrano/nuxt2/base_helpers'
+include Capistrano::Nuxt2::BaseHelpers
 
 namespace :load do
   task :defaults do

@@ -2,7 +2,7 @@ require 'erb'
 require 'stringio'
 
 module Capistrano
-  module Recipes2go
+  module Nuxt2
     module BaseHelpers
 
       def build_deploy_env_var

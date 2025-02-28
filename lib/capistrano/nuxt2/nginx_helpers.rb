@@ -1,5 +1,5 @@
 module Capistrano
-  module Recipes2go
+  module Nuxt2
     module NginxHelpers
       def joiner
         "\n                        "
