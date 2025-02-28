@@ -74,6 +74,17 @@ namespace :nuxt do
   end
 
 
+  desc "Setup defaults for Nuxt.js app"
+  task :setup_app do
+    on roles(:web) do
+      ensure_shared_www_path
+      execute :touch, "#{shared_path}/#{fetch(:nuxt_stat_file)}"
+      execute :touch, "#{shared_path}/#{fetch(:nuxt_logs_file)}"
+      execute :touch, "#{shared_path}/#{fetch(:nuxt_done_file)}"
+    end
+  end
+
+
   desc "Regenerate Nuxt.js app"
   task :rebuild_app do
     invoke "nuxt:install_dependencies"
@@ -94,4 +105,10 @@ namespace :deploy do
   after 'deploy:published', :rebuild_nuxt_app do
     invoke "nuxt:rebuild_app"
   end
+end
+
+
+desc 'Server setup tasks'
+task :setup do
+  invoke 'nuxt:setup_app'
 end

@@ -26,6 +26,10 @@ module Capistrano
         ensure_shared_path("#{shared_path}/www")
       end
 
+      def ensure_shared_path
+        ensure_shared_path("#{shared_path}")
+      end
+
       def ensure_shared_path_ownership
         # Fix ownership only if needed (avoids unnecessary chown operations)
         unless test("stat -c '%U:%G' #{shared_path} | grep #{fetch(:user)}:#{fetch(:user)}")
