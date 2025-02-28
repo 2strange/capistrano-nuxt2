@@ -62,7 +62,7 @@ namespace :certbot do
       end.join(" ")
 
       # 4️⃣ Execute Certbot
-      execute :sudo, "certbot --non-interactive --agree-tos --allow-subset-of-names --email #{fetch(:certbot_email)} certonly --webroot -w #{current_path}/public #{domain_args} #{expand_option}"
+      execute :sudo, "certbot --non-interactive --agree-tos --allow-subset-of-names --email #{fetch(:certbot_email)} certonly --webroot -w #{shared_path} #{domain_args} #{expand_option}"
     end
   end
   
@@ -73,7 +73,7 @@ namespace :certbot do
     on release_roles fetch(:certbot_roles) do
       if fetch(:certbot_job_type, 'systemd') == 'cron'
         # just once a week
-        execute :sudo, "echo '0 0 * * 0 root certbot renew --no-self-upgrade --allow-subset-of-names --post-hook \"#{fetch(:nginx_service_path)} restart\"  >> #{ fetch(:certbot_job_log) } 2>&1' | cat > #{ fetch(:certbot_path) }/lets_encrypt_cronjob"
+        execute :sudo, "echo '0 0 * * 0 root certbot renew --no-self-upgrade --allow-subset-of-names --post-hook \"systemctl restart nginx\"  >> #{ fetch(:certbot_job_log) } 2>&1' | cat > #{ fetch(:certbot_path) }/lets_encrypt_cronjob"
         execute :sudo, "mv -f #{ fetch(:certbot_path) }/lets_encrypt_cronjob /etc/cron.d/lets_encrypt"
         execute :sudo, "chown -f root:root /etc/cron.d/lets_encrypt"
         execute :sudo, "chmod -f 0644 /etc/cron.d/lets_encrypt"
