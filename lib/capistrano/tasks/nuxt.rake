@@ -53,7 +53,8 @@ namespace :nuxt do
   task :export do
     on roles(:web) do
       within release_path do
-        execute :npm, "run generate"
+        execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
+        execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
       end
     end
   end
@@ -87,16 +88,26 @@ namespace :nuxt do
 
   desc "Regenerate Nuxt.js app"
   task :rebuild_app do
+    execute :echo, "'starting|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:install_dependencies"
+    execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:build"
+    execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:export"
+    execute :echo, "'syncing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:sync_dist"
+    execute :echo, "'success|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
+    execute :touch, "#{shared_path}/#{fetch(:nuxt_done_file)}"
   end
 
   desc "Regenerate Nuxt.js app"
   task :regenerate_app do
+    execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:export"
+    execute :echo, "'syncing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
     invoke "nuxt:sync_dist"
+    execute :echo, "'success|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
+    execute :touch, "#{shared_path}/#{fetch(:nuxt_done_file)}"
   end
 
 end
