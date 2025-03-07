@@ -9,12 +9,11 @@ Gem::Specification.new do |spec|
   spec.email       = ["trendgegner@gmail.com"]
   spec.homepage    = "https://github.com/2strange/capistrano-nuxt2"
   spec.summary     = "Capistrano::Nuxt2 capistrano recipes to deploy nuxt 2 apps."
-  spec.description = "TODO: Description of Capistrano::Nuxt2."
+  spec.description = "Description of Capistrano::Nuxt2."
   spec.license     = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/2strange/capistrano-nuxt2"
-  # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir["{config,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
