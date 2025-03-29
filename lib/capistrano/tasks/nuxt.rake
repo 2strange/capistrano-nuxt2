@@ -73,8 +73,9 @@ namespace :nuxt do
         execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
         if fetch(:nuxt_use_nvm, false)
-          env_string = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          execute %(bash -lc '#{env_string} cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}')
+          env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
+          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          execute %(bash -lc '#{env_vars} #{nvm_prefix} && cd #{release_path} && nuxt generate')
         else
           execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
         end
