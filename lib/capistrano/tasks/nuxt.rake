@@ -37,13 +37,11 @@ namespace :nuxt do
   task :install_dependencies do
     on roles(:web) do
       within release_path do
-        ## reload node-modules
-        # execute :rm, "-rf node_modules"
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
-          env_string = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          execute %(bash -lc '#{env_string} cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm install')
-
+          env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
+          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
         else
           execute :npm, "install"
         end
@@ -51,20 +49,23 @@ namespace :nuxt do
     end
   end
 
+
   desc "Build Nuxt.js app"
   task :build do
     on roles(:web) do
       within release_path do
         execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
-          env_string = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          execute %(bash -lc '#{env_string} cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run build')
+          env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
+          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} ./node_modules/.bin/nuxt build')
         else
           execute :npm, "run build"
         end
       end
     end
   end
+
 
   desc "Export static files (if needed)"
   task :export do
