@@ -41,7 +41,9 @@ namespace :nuxt do
         # execute :rm, "-rf node_modules"
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
-          execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm install"
+          with fetch(:default_env) do
+            execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm install"
+          end
         else
           execute :npm, "install"
         end
@@ -55,7 +57,9 @@ namespace :nuxt do
       within release_path do
         execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
-          execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run build"
+          with fetch(:default_env) do
+            execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run build"
+          end
         else
           execute :npm, "run build"
         end
@@ -70,7 +74,9 @@ namespace :nuxt do
         execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
         if fetch(:nuxt_use_nvm, false)
-          execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
+          with fetch(:default_env) do
+            execute "cd #{release_path} && nvm use #{fetch(:nuxt_nvm_version)} && npm run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
+          end
         else
           execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
         end
