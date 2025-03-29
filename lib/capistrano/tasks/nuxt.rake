@@ -8,6 +8,10 @@ namespace :load do
     set :nuxt_logs_file,          -> { "_builded_logs" }
     set :nuxt_done_file,          -> { "_builded_frontend" }
 
+    set :nuxt_use_nvm,            -> { false }
+    set :nuxt_nvm_path,           -> { "~/.nvm" }
+    set :nuxt_nvm_version,        -> { "18.19.0" }
+
     ## Maybe nonsense .. builds `APP_NAME_STG_DEPLOY_MODE`
     set :nuxt_stage_env_var,      -> { build_deploy_env_var }
 
@@ -36,7 +40,11 @@ namespace :nuxt do
         ## reload node-modules
         # execute :rm, "-rf node_modules"
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
-        execute :npm, "install"
+        if fetch(:nuxt_use_nvm, false)
+          execute "nvm use #{fetch(:nuxt_nvm_version)} && npm install"
+        else
+          execute :npm, "install"
+        end
       end
     end
   end
@@ -46,7 +54,11 @@ namespace :nuxt do
     on roles(:web) do
       within release_path do
         execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
-        execute :npm, "run build"
+        if fetch(:nuxt_use_nvm, false)
+          execute "nvm use #{fetch(:nuxt_nvm_version)} && npm run build"
+        else
+          execute :npm, "run build"
+        end
       end
     end
   end
@@ -57,7 +69,11 @@ namespace :nuxt do
       within release_path do
         execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
-        execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
+        if fetch(:nuxt_use_nvm, false)
+          execute "nvm use #{fetch(:nuxt_nvm_version)} && npm run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
+        else
+          execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
+        end
       end
     end
   end

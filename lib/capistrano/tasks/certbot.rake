@@ -240,7 +240,6 @@ namespace :certbot do
         domain_args = fetch_certbot_domain_args
         user = fetch(:user, "deploy") # Adjust to your user
 
-
         puts "cmd: sudo certbot certonly --manual --preferred-challenges=dns --agree-tos --email #{certbot_email} #{domain_args} #{expand_option}"
 
         puts "🔄 Starting interactive Certbot session..."
