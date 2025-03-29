@@ -75,7 +75,8 @@ namespace :nuxt do
         if fetch(:nuxt_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
           nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
-          execute %(bash -lc '#{env_vars} #{nvm_prefix} && cd #{release_path} && nuxt generate')
+
+          execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} nuxt generate')
         else
           execute :npm, "run generate 2>&1 | tee -a #{shared_path}/#{fetch(:nuxt_logs_file)}"
         end
