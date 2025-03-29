@@ -77,7 +77,7 @@ namespace :certbot do
       expand_option = fetch_certbot_expand_option
       domain_args = fetch_certbot_domain_args
       
-      execute :sudo, "certbot --non-interactive --agree-tos --allow-subset-of-names --email #{certbot_email} certonly --webroot -w #{current_path}/static #{domain_args} #{expand_option}"
+      execute :sudo, "certbot --non-interactive --agree-tos --allow-subset-of-names --email #{certbot_email} certonly --webroot -w #{shared_path} #{domain_args} #{expand_option}"
     end
   end
 
