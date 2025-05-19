@@ -59,7 +59,7 @@ namespace :load do
     set :nginx_log_folder,        -> { "log" }    # App Nginx logs
 
     # This is from your original setup, relevant for the app server.
-    append :linked_dirs, fetch(:nginx_root_folder), fetch(:nginx_log_folder)
+    # append :linked_dirs, fetch(:nginx_root_folder), fetch(:nginx_log_folder)
 
     set :nginx_app_hooks,         -> { true }
     set :allow_well_known_app,    -> { false } # Usually handled by proxy
