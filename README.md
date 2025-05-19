@@ -70,9 +70,13 @@ This will generate the following files:
 ```ruby
 require "capistrano/nuxt2"
 ## or as you want
-require "capistrano/nuxt2/certbot"
-require "capistrano/nuxt2/nginx"
 require "capistrano/nuxt2/nuxt"
+## for certbot
+require "capistrano/nuxt2/certbot"
+## for nginx
+require "capistrano/nuxt2/nginx"
+## for nginx with a proxy server
+require "capistrano/nuxt2/proxy_nginx"
 ```
 
 #### Add the following to your `config/deploy.rb`:
@@ -91,6 +95,31 @@ set :user,                            "DEPLOY_USER"
 set :deploy_to,                       "/home/#{fetch(:user)}/#{fetch(:application)}-#{fetch(:stage)}"
 
 set :branch,                          'STAGE_BRANCH'
+
+## NginX
+set :nginx_domains,                   ["YOUR_DOMAIN"]
+set :nginx_remove_www,                true
+
+## ssl-handling
+set :nginx_use_ssl,                   true
+set :certbot_email,                   "YOUR_EMAIL"
+
+```
+
+#### For nginx with a proxy server
+
+```ruby
+
+server "100.200.300.23", user: "deploy", roles: %w{app web}
+server "100.200.300.42", user: "deploy", roles: %w{proxy}
+
+set :user,                            "DEPLOY_USER"
+set :deploy_to,                       "/home/#{fetch(:user)}/#{fetch(:application)}-#{fetch(:stage)}"
+
+set :branch,                          'STAGE_BRANCH'
+
+set :nginx_proxy_upstream_app_host,   "100.200.300.23"
+set :nginx_proxy_upstream_app_port,   "3550"
 
 ## NginX
 set :nginx_domains,                   ["YOUR_DOMAIN"]
