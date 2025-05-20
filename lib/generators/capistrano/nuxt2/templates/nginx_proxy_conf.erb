@@ -15,7 +15,7 @@ server {
 
   <% if fetch(:allow_well_known_proxy) %>
   # For Certbot ACME Challenge
-  location ~ /.well-known/acme-challenge/ {
+  location ~ /.well-known {
     allow all;
     root <%= fetch(:nginx_proxy_well_known_root) %>; # Pfad für Certbot auf dem Proxy
   }
@@ -96,14 +96,12 @@ server {
 
   <%# For Certbot ACME Challenge (falls direkt auf Port 443/80 ohne vorherigen Redirect) %>
   <% if fetch(:allow_well_known_proxy) %>
-  location ~ /.well-known/acme-challenge/ {
+  location ~ /.well-known {
     allow all;
     root <%= fetch(:nginx_proxy_well_known_root) %>; # Pfad für Certbot auf dem Proxy
   }
   <% end %>
 
-  # Andere .well-known Anfragen (z.B. security.txt) könnten auch hier oder an den App-Server geproxied werden
-  # location ~ /.well-known { ... }
 
 
   # Proxying to the App Server
