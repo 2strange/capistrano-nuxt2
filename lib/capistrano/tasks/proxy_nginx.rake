@@ -34,7 +34,7 @@ namespace :load do
       "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:" \
       "ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-CHACHA20-POLY1305"
     }
-    set :allow_well_known_proxy,  -> { fetch(:nginx_use_ssl, false) } # For Certbot on proxy
+    set :allow_well_known_proxy,  -> { true } # For Certbot on proxy
     set :nginx_proxy_well_known_root, -> { "/var/www/html" } # Standard path for Certbot webroot on proxy
 
     set :nginx_proxy_log_folder,  -> { "/var/log/nginx" } # Standard Nginx log folder for proxy
