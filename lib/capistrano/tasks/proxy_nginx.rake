@@ -96,7 +96,6 @@ namespace :nginx do
             puts "📤 [PROXY] Using custom template #{config_file}"
             template2go(config_file, "/tmp/#{target_config}")
           end
-          template2go(config_file, "/tmp/#{target_config}")
           execute :sudo, :mv, "/tmp/#{target_config}", "/etc/nginx/sites-available/#{target_config}"
         end
       end
