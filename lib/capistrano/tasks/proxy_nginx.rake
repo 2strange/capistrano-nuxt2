@@ -90,8 +90,10 @@ namespace :nginx do
 
           puts "📤 [PROXY] Uploading Nginx config: #{target_config} from #{config_file}"
           if config_file == :default
+            puts "📤 [PROXY] Using default template"
             template2go("nginx_proxy_conf", "/tmp/#{target_config}")
           else
+            puts "📤 [PROXY] Using custom template #{config_file}"
             template2go(config_file, "/tmp/#{target_config}")
           end
           template2go(config_file, "/tmp/#{target_config}")
