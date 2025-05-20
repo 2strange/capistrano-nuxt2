@@ -111,7 +111,7 @@ set :certbot_email,                   "YOUR_EMAIL"
 ```ruby
 
 server "100.200.300.23", user: "deploy", roles: %w{app web}
-server "100.200.300.42", user: "deploy", roles: %w{proxy}
+server "100.200.300.42", user: "deploy", roles: %w{proxy}, no_release: true
 
 set :user,                            "DEPLOY_USER"
 set :deploy_to,                       "/home/#{fetch(:user)}/#{fetch(:application)}-#{fetch(:stage)}"

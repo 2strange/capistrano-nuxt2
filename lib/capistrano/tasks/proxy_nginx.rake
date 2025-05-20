@@ -84,7 +84,7 @@ namespace :nginx do
       desc "Upload Proxy Nginx site configuration"
       task :upload do
         invoke "nginx:proxy:ensure_upstream_vars_set"
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           config_file = fetch(:nginx_proxy_template)
           target_config = fetch(:nginx_proxy_site_name)
 
@@ -101,7 +101,7 @@ namespace :nginx do
 
       desc "Enable Proxy Nginx site"
       task :enable do
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_proxy_site_name)}"
           available_path = "/etc/nginx/sites-available/#{fetch(:nginx_proxy_site_name)}"
           unless test "[ -h #{enabled_path} ]"
@@ -116,7 +116,7 @@ namespace :nginx do
 
       desc "Disable Proxy Nginx site"
       task :disable do
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_proxy_site_name)}"
           if test "[ -h #{enabled_path} ]"
             puts "🚫 [PROXY] Disabling Nginx site..."
@@ -130,7 +130,7 @@ namespace :nginx do
 
       desc "Remove Proxy Nginx site configuration"
       task :remove do
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           available_path = "/etc/nginx/sites-available/#{fetch(:nginx_proxy_site_name)}"
           if test "[ -f #{available_path} ]"
             puts "🗑 [PROXY] Removing Nginx site configuration..."
@@ -160,7 +160,7 @@ namespace :nginx do
       %w[start stop restart reload].each do |command|
         desc "#{command.capitalize} Proxy Nginx service"
         task command do
-          on release_roles fetch(:nginx_proxy_roles) do
+          on roles fetch(:nginx_proxy_roles) do
             puts "🔄 [PROXY] Running: systemctl #{command} nginx..."
             execute :sudo, "systemctl #{command} nginx"
           end
@@ -168,14 +168,14 @@ namespace :nginx do
       end
       desc "Check Proxy Nginx configuration"
       task :check_config do
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           puts "🧐 [PROXY] Checking nginx configuration..."
           execute :sudo, "nginx -t"
         end
       end
       desc "Check Proxy Nginx status"
       task :check_status do
-        on release_roles fetch(:nginx_proxy_roles) do
+        on roles fetch(:nginx_proxy_roles) do
           puts "🔍 [PROXY] Checking nginx status..."
           execute :sudo, "systemctl status nginx --no-pager"
         end
@@ -184,7 +184,7 @@ namespace :nginx do
 
     desc "Update Proxy Nginx (Upload, Enable if needed, Reload/Restart)"
     task :update do
-      on release_roles fetch(:nginx_proxy_roles) do
+      on roles fetch(:nginx_proxy_roles) do
         puts "🔄 [PROXY] Reconfiguring Nginx..."
         invoke "nginx:proxy:site:upload"
         enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_proxy_site_name)}"
@@ -209,7 +209,7 @@ namespace :nginx do
     namespace :site do
       desc "Upload App Nginx site configuration"
       task :upload do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           config_file = fetch(:nginx_app_template)
           target_config = fetch(:nginx_app_site_name)
 
@@ -225,7 +225,7 @@ namespace :nginx do
 
       desc "Enable App Nginx site"
       task :enable do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_app_site_name)}"
           available_path = "/etc/nginx/sites-available/#{fetch(:nginx_app_site_name)}"
           unless test "[ -h #{enabled_path} ]"
@@ -240,7 +240,7 @@ namespace :nginx do
 
       desc "Disable App Nginx site"
       task :disable do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_app_site_name)}"
           if test "[ -h #{enabled_path} ]"
             puts "🚫 [APP] Disabling Nginx site..."
@@ -254,7 +254,7 @@ namespace :nginx do
 
       desc "Remove App Nginx site configuration"
       task :remove do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           available_path = "/etc/nginx/sites-available/#{fetch(:nginx_app_site_name)}"
           if test "[ -f #{available_path} ]"
             puts "🗑 [APP] Removing Nginx site configuration..."
@@ -284,7 +284,7 @@ namespace :nginx do
       %w[start stop restart reload].each do |command|
         desc "#{command.capitalize} App Nginx service"
         task command do
-          on release_roles fetch(:nginx_app_roles) do
+          on roles fetch(:nginx_app_roles) do
             # IF DOCKER: Replace with docker command e.g.
             # execute :sudo, "docker restart #{fetch(:nginx_app_container_name)}" if command == 'restart'
             # execute :sudo, "docker exec #{fetch(:nginx_app_container_name)} nginx -s #{command == 'restart' ? 'reload' : command}" # for reload, stop
@@ -295,7 +295,7 @@ namespace :nginx do
       end
       desc "Check App Nginx configuration"
       task :check_config do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           # IF DOCKER: execute :sudo, "docker exec #{fetch(:nginx_app_container_name)} nginx -t"
           puts "🧐 [APP] Checking nginx configuration..."
           execute :sudo, "nginx -t"
@@ -303,7 +303,7 @@ namespace :nginx do
       end
       desc "Check App Nginx status"
       task :check_status do
-        on release_roles fetch(:nginx_app_roles) do
+        on roles fetch(:nginx_app_roles) do
           # IF DOCKER: execute :sudo, "docker ps -f name=#{fetch(:nginx_app_container_name)}"
           puts "🔍 [APP] Checking nginx status..."
           execute :sudo, "systemctl status nginx --no-pager"
@@ -313,7 +313,7 @@ namespace :nginx do
 
     desc "Update App Nginx (Upload, Enable if needed, Reload/Restart)"
     task :update do
-      on release_roles fetch(:nginx_app_roles) do
+      on roles fetch(:nginx_app_roles) do
         puts "🔄 [APP] Reconfiguring Nginx..."
         invoke "nginx:app:site:upload"
         enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_app_site_name)}"
@@ -329,7 +329,7 @@ namespace :nginx do
 
     desc "Fix App Nginx folder rights (if permission problems occur)"
     task :fix_folder_rights do
-      on release_roles fetch(:nginx_app_roles) do # Only on app servers
+      on roles fetch(:nginx_app_roles) do # Only on app servers
         puts "🛡️  [APP] Fixing folder rights..."
         execute :sudo, "chmod o+x /home/#{fetch(:user)}"
         execute :sudo, "chmod o+x #{fetch(:deploy_to)}"
