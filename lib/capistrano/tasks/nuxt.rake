@@ -11,6 +11,9 @@ namespace :load do
     set :nuxt_use_nvm,            -> { false }
     set :nuxt_nvm_path,           -> { "~/.nvm" }
     set :nuxt_nvm_version,        -> { "18.19.0" }
+    set :nuxt_nvm_script,         -> { "$HOME/.nvm/nvm.sh" }
+
+    set :nuxt_app_roles,          -> { :app }
 
     ## Maybe nonsense .. builds `APP_NAME_STG_DEPLOY_MODE`
     set :nuxt_stage_env_var,      -> { build_deploy_env_var }
@@ -40,7 +43,7 @@ namespace :nuxt do
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          nvm_prefix = "source #{fetch(:nuxt_nvm_script)} && nvm use #{fetch(:nuxt_nvm_version)}"
           execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
         else
           execute :npm, "install"
@@ -57,7 +60,7 @@ namespace :nuxt do
         execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          nvm_prefix = "source #{fetch(:nuxt_nvm_script)} && nvm use #{fetch(:nuxt_nvm_version)}"
           execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} ./node_modules/.bin/nuxt build')
         else
           execute :npm, "run build"
@@ -75,7 +78,7 @@ namespace :nuxt do
         execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
         if fetch(:nuxt_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          nvm_prefix = "source $HOME/.nvm/nvm.sh && nvm use #{fetch(:nuxt_nvm_version)}"
+          nvm_prefix = "source #{fetch(:nuxt_nvm_script)} && nvm use #{fetch(:nuxt_nvm_version)}"
 
           execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars}  ./node_modules/.bin/nuxt generate')
         else
