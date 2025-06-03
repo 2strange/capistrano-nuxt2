@@ -199,7 +199,7 @@ namespace :certbot do
 
   desc "Check if TLS 1.3 is correctly enabled on the server"
   task :check_tls do
-    on roles(:web) do
+    on roles fetch(:certbot_roles) do
       domain = fetch(:nginx_major_domain, fetch(:nginx_domains).first)
 
       puts "🔍 Checking TLS 1.3 for #{domain}..."
@@ -234,7 +234,7 @@ namespace :certbot do
 
   desc 'Run Certbot to validate the DNS challenge'
   task :dns_challenge_validate do
-    on roles(:app) do
+    on roles fetch(:certbot_roles) do
       within release_path do
         certbot_email = fetch_certbot_email
         expand_option = fetch_certbot_expand_option
