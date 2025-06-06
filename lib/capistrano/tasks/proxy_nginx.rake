@@ -191,10 +191,10 @@ namespace :nginx do
         enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_proxy_site_name)}"
         if test "[ -h #{enabled_path} ]"
           puts "🔗 [PROXY] Site already enabled, reloading."
-          invoke "nginx:proxy:service:reload" # Or :restart if significant changes
         else
           invoke "nginx:proxy:site:enable" # This will also reload
         end
+        invoke "nginx:proxy:service:restart" # Or :restart if significant changes
         puts "✅ [PROXY] Nginx reconfiguration complete!"
       end
     end
@@ -320,10 +320,10 @@ namespace :nginx do
         enabled_path = "/etc/nginx/sites-enabled/#{fetch(:nginx_app_site_name)}"
         if test "[ -h #{enabled_path} ]"
           puts "🔗 [APP] Site already enabled, reloading."
-          invoke "nginx:app:service:reload" # Or :restart
         else
           invoke "nginx:app:site:enable"
         end
+        invoke "nginx:app:service:restart" # Or :restart
         puts "✅ [APP] Nginx reconfiguration complete!"
       end
     end
