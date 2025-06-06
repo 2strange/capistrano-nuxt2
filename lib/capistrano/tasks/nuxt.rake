@@ -132,6 +132,15 @@ namespace :nuxt do
     invoke "nuxt:sync_dist"
   end
 
+  desc "Install required node version with nvm"
+  task :install_nvm_node do
+    on roles(:web) do
+      if fetch(:nuxt_use_nvm, false)
+        execute %(bash -lc 'source #{fetch(:nuxt_nvm_script)} && nvm install #{fetch(:nuxt_nvm_version)}')
+      end
+    end
+  end
+
 end
 
 namespace :deploy do
