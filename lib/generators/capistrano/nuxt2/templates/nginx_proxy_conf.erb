@@ -129,8 +129,8 @@ server {
     client_max_body_size 0;
     
     # proxy_redirect    off;
-    # <<< Das ist der entscheidende Fix:
-    proxy_redirect http://<%= fetch(:nginx_upstream_host) %>:<%= fetch(:nginx_upstream_port) %>/ /;
+    # FIX: Ersetze in Location-Header :<%= fetch(:nginx_upstream_port) %> egal auf welchem Host
+    proxy_redirect ~^(.+):<%= fetch(:nginx_upstream_port) %>/(.*) $1/$2;
     
     proxy_pass        http://app_<%= fetch(:application) %>_<%= fetch(:stage) %>_app_server;
   }
