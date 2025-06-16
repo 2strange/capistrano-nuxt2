@@ -2,12 +2,12 @@
 ### APP HTTP-Config generated with capistrano at: <%= Time.now.strftime("%Y-%m-%d .. %H:%M .. %Z") %>
 ### Application: <%= fetch(:application) %>, Stage: <%= fetch(:stage) %>
 ### Site Name: <%= fetch(:nginx_app_site_name) %>
-### Listening on Port: <%= fetch(:nginx_upstream_app_port) %>
+### Listening on Port: <%= fetch(:nginx_upstream_port) %>
 ###
 
 server {
-  listen <%= fetch(:nginx_upstream_app_port) %>;
-  listen [::]:<%= fetch(:nginx_upstream_app_port) %>;
+  listen <%= fetch(:nginx_upstream_port) %>;
+  listen [::]:<%= fetch(:nginx_upstream_port) %>;
 
   # Lausche auf jede Domain oder interne IP, da der Proxy davor sitzt
   server_name _; # Oder localhost, oder die interne IP des App-Servers

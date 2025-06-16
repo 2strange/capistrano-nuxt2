@@ -2,8 +2,19 @@
 ### PROXY HTTP-Config generated with capistrano at: <%= Time.now.strftime("%Y-%m-%d .. %H:%M .. %Z") %>
 ### Application: <%= fetch(:application) %>, Stage: <%= fetch(:stage) %>
 ### Site Name: <%= fetch(:nginx_proxy_site_name) %>
-### Upstream App: <%= fetch(:nginx_upstream_app_host) %>:<%= fetch(:nginx_upstream_app_port) %>
+### Upstream App: <%= fetch(:nginx_upstream_host) %>:<%= fetch(:nginx_upstream_port) %>
 ###
+
+
+# Upstream for the Internal App Nginx Server
+# This is where your App Nginx (e.g., in a Docker container or on a separate VM) listens.
+upstream app_<%= fetch(:application) %>_<%= fetch(:stage) %>_app_server {
+  server <%= fetch(:nginx_upstream_host) %>:<%= fetch(:nginx_upstream_port) %>;
+  # If you have multiple app servers, you'd list them here:
+  # server 10.0.0.6:4550;
+  # server 10.0.0.7:4550;
+}
+
 
 <% if fetch(:nginx_use_ssl) %>
 # Redirect HTTP to HTTPS
@@ -116,7 +127,7 @@ server {
     proxy_buffers 64 512k;
     client_body_buffer_size 512k;
     client_max_body_size 0;
-    # proxy_redirect    off;
-    proxy_pass http://<%= fetch(:nginx_upstream_app_host) %>:<%= fetch(:nginx_upstream_app_port) %>;
+    proxy_redirect    off;
+    proxy_pass        http://app_<%= fetch(:application) %>_<%= fetch(:stage) %>_app_server;
   }
 }
