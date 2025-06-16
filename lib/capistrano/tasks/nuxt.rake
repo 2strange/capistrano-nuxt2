@@ -111,6 +111,7 @@ namespace :nuxt do
   task :setup_app do
     on roles(fetch(:nuxt_app_roles)) do
       ensure_shared_www_path
+      ensure_shared_log_path
       execute :touch, "#{shared_path}/#{fetch(:nuxt_stat_file)}"
       execute :touch, "#{shared_path}/#{fetch(:nuxt_logs_file)}"
       execute :touch, "#{shared_path}/#{fetch(:nuxt_done_file)}"

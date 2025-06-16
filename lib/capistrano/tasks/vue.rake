@@ -70,6 +70,13 @@ namespace :vue do
     end
   end
 
+  desc "Setup defaults for Vue.js app"
+  task :setup_app do
+    on roles(fetch(:nuxt_app_roles)) do
+      ensure_shared_www_path
+      ensure_shared_log_path
+    end
+  end
 
   desc "Fix permissions (just in case)"
   task :fix_permissions do
