@@ -127,7 +127,11 @@ server {
     proxy_buffers 64 512k;
     client_body_buffer_size 512k;
     client_max_body_size 0;
-    proxy_redirect    off;
+    
+    # proxy_redirect    off;
+    # <<< Das ist der entscheidende Fix:
+    proxy_redirect http://<%= fetch(:nginx_upstream_host) %>:<%= fetch(:nginx_upstream_port) %>/ /;
+    
     proxy_pass        http://app_<%= fetch(:application) %>_<%= fetch(:stage) %>_app_server;
   }
 }
