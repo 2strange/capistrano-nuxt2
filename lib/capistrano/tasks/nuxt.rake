@@ -30,7 +30,7 @@ namespace :nuxt do
 
   desc "output env var and stage"
   task :output_env do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       puts "🔧 Nuxt.js stage: #{fetch(:stage)}"
       puts "🔧 Nuxt.js deploy mode: #{fetch(:nuxt_stage_env_var)}"
     end
@@ -38,7 +38,7 @@ namespace :nuxt do
 
   desc "Install dependencies"
   task :install_dependencies do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       within release_path do
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
@@ -55,7 +55,7 @@ namespace :nuxt do
 
   desc "Build Nuxt.js app"
   task :build do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       within release_path do
         execute :echo, "'building|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         if fetch(:nuxt_use_nvm, false)
@@ -72,7 +72,7 @@ namespace :nuxt do
 
   desc "Export static files (if needed)"
   task :export do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       within release_path do
         execute :echo, "'generating|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
         execute :echo, "'Deploy - Render - LOGS :: #{ Time.now.strftime("%d.%m.%Y - %H:%M") } ::' > #{shared_path}/#{fetch(:nuxt_logs_file)}"
@@ -90,7 +90,7 @@ namespace :nuxt do
 
   desc "Sync the dist folder to the shared folder"
   task :sync_dist do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       execute :echo, "'syncing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
       execute :rsync, "-a --delete #{release_path}/dist/ #{shared_path}/www/"
       execute :echo, "'success|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
@@ -101,7 +101,7 @@ namespace :nuxt do
 
   desc "Fix permissions (just in case)"
   task :fix_permissions do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       execute :sudo, :chown, "-R #{fetch(:user)}:#{fetch(:user)} #{release_path}"
     end
   end
@@ -109,7 +109,7 @@ namespace :nuxt do
 
   desc "Setup defaults for Nuxt.js app"
   task :setup_app do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       ensure_shared_www_path
       execute :touch, "#{shared_path}/#{fetch(:nuxt_stat_file)}"
       execute :touch, "#{shared_path}/#{fetch(:nuxt_logs_file)}"
@@ -134,7 +134,7 @@ namespace :nuxt do
 
   desc "Install required node version with nvm"
   task :install_nvm_node do
-    on roles(:web) do
+    on roles(fetch(:nuxt_app_roles)) do
       if fetch(:nuxt_use_nvm, false)
         execute %(bash -lc 'source #{fetch(:nuxt_nvm_script)} && nvm install #{fetch(:nuxt_nvm_version)}')
       end

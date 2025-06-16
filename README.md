@@ -118,12 +118,11 @@ set :deploy_to,                       "/home/#{fetch(:user)}/#{fetch(:applicatio
 
 set :branch,                          'STAGE_BRANCH'
 
-set :nginx_proxy_upstream_app_host,   "100.200.300.23"
-set :nginx_proxy_upstream_app_port,   "3550"
+set :nginx_upstream_host,             "100.200.300.23"
+set :nginx_upstream_port,             "3550"
 
 ## NginX
 set :nginx_domains,                   ["YOUR_DOMAIN"]
-set :nginx_remove_www,                true
 
 ## ssl-handling
 set :nginx_use_ssl,                   true
