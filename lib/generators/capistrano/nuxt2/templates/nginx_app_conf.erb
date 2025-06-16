@@ -20,8 +20,8 @@ server {
 
   # Logging für die App
   # Pfade sind relativ zu shared_path, wie in deinen linked_dirs definiert
-  access_log <%= shared_path %>/<%= fetch(:nginx_log_folder) %>/<%= fetch(:nginx_app_site_name) %>-access.log;
-  error_log  <%= shared_path %>/<%= fetch(:nginx_log_folder) %>/<%= fetch(:nginx_app_site_name) %>-error.log;
+  access_log <%= shared_path %>/<%= fetch(:nginx_log_folder) %>/nginx-access.log;
+  error_log  <%= shared_path %>/<%= fetch(:nginx_log_folder) %>/nginx-error.log;
 
 
   # .well-known Anfragen könnten auch hier landen, wenn der Proxy sie durchlässt
