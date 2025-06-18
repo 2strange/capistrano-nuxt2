@@ -57,6 +57,7 @@ namespace :load do
     set :nginx_app_roles,         -> { :app }
     set :nginx_app_template,      -> { :default }
     set :nginx_app_site_name,     -> { "#{fetch(:application)}_#{fetch(:stage)}_app" }
+    set :nginx_app_fallback_site, -> { "404.html" } # Fallback: Nuxt.js default "404.html" page .. Vue default is "index.html"
 
     # App specific paths (relative to shared_path for linked_dirs)
     set :nginx_root_folder,       -> { "#{shared_path}/www" }    # JS app static files (Nuxt default: "dist")

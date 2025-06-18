@@ -106,7 +106,7 @@ server {
 
   # SPA-routing
   location / {
-    try_files $uri $uri/ /404.html;
+    try_files $uri $uri/ /<%= fetch(::nginx_app_fallback_site, "404.html") %>;
   }
 
 }

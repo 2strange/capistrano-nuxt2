@@ -17,6 +17,7 @@ namespace :load do
 
     # Define Nginx Site Name
     set :nginx_site_name,         -> { "#{fetch(:application)}_#{fetch(:stage)}" }
+    set :nginx_app_fallback_site, -> { "404.html" } # Fallback: Nuxt.js default "404.html" page .. Vue default is "index.html"
 
     # SSL Paths
     set :nginx_ssl_cert,          -> { "/etc/letsencrypt/live/#{ cert_domain }/fullchain.pem" }
