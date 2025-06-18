@@ -112,3 +112,9 @@ namespace :deploy do
   end
 end
 
+
+desc 'Server setup tasks'
+task :setup do
+  invoke 'vue:setup_app'
+end
+
