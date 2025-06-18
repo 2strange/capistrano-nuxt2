@@ -40,7 +40,7 @@ namespace :vue do
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
           nvm_prefix = "source #{fetch(:vue_nvm_script)} && nvm use #{fetch(:vue_nvm_version)}"
           if fetch(:vue_install_without_env, false)
-            execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && npm install')
+            execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && npm install --production=false')
           else
             execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
           end
