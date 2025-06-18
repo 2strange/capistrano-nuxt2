@@ -5,12 +5,13 @@ namespace :load do
   task :defaults do
 
 
-    set :vue_use_nvm,            -> { false }
-    set :vue_nvm_path,           -> { "~/.nvm" }
-    set :vue_nvm_version,        -> { "18.19.0" }
-    set :vue_nvm_script,         -> { "$HOME/.nvm/nvm.sh" }
+    set :vue_use_nvm,               -> { false }
+    set :vue_install_without_env,   -> { false }
+    set :vue_nvm_path,              -> { "~/.nvm" }
+    set :vue_nvm_version,           -> { "18.19.0" }
+    set :vue_nvm_script,            -> { "$HOME/.nvm/nvm.sh" }
 
-    set :vue_app_roles,          -> { :app }
+    set :vue_app_roles,             -> { :app }
 
     ## Maybe nonsense .. builds `APP_NAME_STG_DEPLOY_MODE`
     set :vue_stage_env_var,      -> { build_deploy_env_var }
@@ -38,7 +39,11 @@ namespace :vue do
         if fetch(:vue_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
           nvm_prefix = "source #{fetch(:vue_nvm_script)} && nvm use #{fetch(:vue_nvm_version)}"
-          execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
+          if fetch(:vue_install_without_env, false)
+            execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && npm install')
+          else
+            execute %(bash -lc '#{nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
+          end
         else
           execute :npm, "install"
         end
