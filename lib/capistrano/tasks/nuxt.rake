@@ -41,6 +41,8 @@ namespace :nuxt do
     on roles(fetch(:nuxt_app_roles)) do
       within release_path do
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt_stat_file)}"
+        execute :rm, "-rf node_modules/*"
+        execute :rm, "-rf #{shared_path}/node_modules/*"
         if fetch(:nuxt_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
           nvm_prefix = "source #{fetch(:nuxt_nvm_script)} && nvm use #{fetch(:nuxt_nvm_version)}"
