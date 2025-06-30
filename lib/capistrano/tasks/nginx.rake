@@ -10,6 +10,10 @@ namespace :load do
     set :nginx_remove_www,        -> { true }
     set :nginx_use_ssl,           -> { false }
 
+    # also allow http access, if ssl is enabled (full http block will be created, but only if this is set to true)
+    set :nginx_also_allow_http,   -> { false }
+    
+
     set :nginx_roles,             -> { :web }
     set :nginx_log_folder,        -> { "log" }
     set :nginx_root_folder,       -> { "www" }    # Nuxt default: "dist"
