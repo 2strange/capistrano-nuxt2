@@ -132,5 +132,91 @@ set :certbot_email,                   "YOUR_EMAIL"
 
 ---
 
+## Nuxt 3
+
+The `nuxt3:` tasks deploy Nuxt 3 apps. Nuxt 3 builds into `.output/`
+(`.output/server/index.mjs` for SSR, `.output/public/` for static assets),
+not `dist/`. Two modes are supported:
+
+- **SSR (default):** `nuxt build` → the Nitro server runs as a systemd service
+  (`node .output/server/index.mjs`), with the existing proxy in front of it.
+- **Static:** `nuxt generate` → `.output/public/` is synced to `shared/www`
+  and served directly by nginx (no node service). Good for content sites.
+
+Opt-in, leaves the Nuxt-2 `nuxt:` tasks untouched. Add to your `Capfile`:
+
+```ruby
+require "capistrano/nuxt2/nuxt3"
+## plus proxy + certbot as needed
+require "capistrano/nuxt2/proxy_nginx"
+require "capistrano/nuxt2/certbot"
+```
+
+#### SSR app — `config/deploy/-STAGE-.rb`
+
+```ruby
+server "100.200.300.23", user: "deploy", roles: %w{app web}
+server "100.200.300.42", user: "deploy", roles: %w{proxy}, no_release: true
+
+set :user,                  "DEPLOY_USER"
+set :deploy_to,             "/home/#{fetch(:user)}/#{fetch(:application)}-#{fetch(:stage)}"
+set :branch,                'STAGE_BRANCH'
+
+## Nuxt 3 SSR (Nitro node service)
+set :nuxt3_deploy_mode,     :ssr            # default
+set :nuxt3_use_nvm,         true
+set :nuxt3_nvm_version,     "20.19.0"
+set :nuxt3_ssr_port,        3500            # Nitro listens here (127.0.0.1)
+set :nuxt3_ssr_env,         { "NUXT_PUBLIC_API_BASE" => "https://api.example.com" }
+
+## Proxy points at the Nitro service
+set :nginx_upstream_host,   "100.200.300.23"
+set :nginx_upstream_port,   fetch(:nuxt3_ssr_port)
+
+## NginX / SSL
+set :nginx_domains,         ["YOUR_DOMAIN"]
+set :nginx_use_ssl,         true
+set :certbot_email,         "YOUR_EMAIL"
+```
+
+#### Static site — `config/deploy/-STAGE-.rb`
+
+```ruby
+server "SERVER_DOMAIN_OR_IP", user: "DEPLOY_USER", roles: %w{web}
+
+set :user,                  "DEPLOY_USER"
+set :deploy_to,             "/home/#{fetch(:user)}/#{fetch(:application)}-#{fetch(:stage)}"
+set :branch,                'STAGE_BRANCH'
+
+set :nuxt3_deploy_mode,     :static
+set :nuxt3_use_nvm,         true
+set :nuxt3_nvm_version,     "20.19.0"
+
+## NginX / SSL (serves shared/www directly)
+set :nginx_domains,         ["YOUR_DOMAIN"]
+set :nginx_use_ssl,         true
+set :certbot_email,         "YOUR_EMAIL"
+```
+
+The `deploy:published` hook rebuilds automatically per `:nuxt3_deploy_mode`.
+Manage the SSR service with `cap <stage> nuxt3:ssr:{setup,activate,restart,check_status,logs}`.
+
+**First SSR deploy** (the systemd unit doesn't exist yet, so an auto-restart
+would fail — same as puma/sidekiq):
+
+```ruby
+set :nuxt3_ssr_hooks, false   # in the stage file, for the first deploy only
+```
+
+```sh
+cap <stage> deploy              # builds + syncs .output (no restart)
+cap <stage> nuxt3:ssr:configure # uploads + enables + starts the Nitro unit
+```
+
+Then set `nuxt3_ssr_hooks` back to `true` (the default) so subsequent deploys
+restart the service cleanly.
+
+---
+
 ## License
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
