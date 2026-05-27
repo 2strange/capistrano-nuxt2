@@ -78,11 +78,19 @@ namespace :nuxt3 do
         execute :echo, "'installing|deploy' > #{shared_path}/#{fetch(:nuxt3_stat_file)}"
         execute :rm, "-rf node_modules/*"
         execute :rm, "-rf #{shared_path}/node_modules/*"
+        # npm ci wenn ein package-lock.json im Release liegt (exakter, deterministischer
+        # Lockfile-Baum) — installiert jedes (genestete) Paket mit SEINEM passenden
+        # Plattform-Binary und verhindert so esbuild/rollup "Expected X but got Y" beim
+        # Hoisting divergierender Versionen. Sonst (kein Lockfile) npm install. Override
+        # erzwingbar via set :nuxt3_npm_install_cmd, "ci"|"install".
+        npm_cmd = fetch(:nuxt3_npm_install_cmd) do
+          test("[ -f #{release_path}/package-lock.json ]") ? "ci" : "install"
+        end
         if fetch(:nuxt3_use_nvm, false)
           env_vars = fetch(:default_env).map { |k, v| "#{k}=#{v}" }.join(" ")
-          execute %(bash -lc '#{nuxt3_nvm_prefix} && cd #{release_path} && env #{env_vars} npm install')
+          execute %(bash -lc '#{nuxt3_nvm_prefix} && cd #{release_path} && env #{env_vars} npm #{npm_cmd}')
         else
-          execute :npm, "install"
+          execute :npm, npm_cmd
         end
       end
     end
