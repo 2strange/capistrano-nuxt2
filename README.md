@@ -1,3 +1,12 @@
+# ⚠️ DEPRECATED — ersetzt durch capistrano-recipes4nuxt
+
+Dieses Gem wird **nicht mehr weiterentwickelt**. Neuer Standard:
+**[capistrano-recipes4nuxt](https://github.com/2strange/capistrano-recipes4nuxt)**
+(deckt Nuxt 2 **und** 3 ab, passt zum recipes2go-Setup inkl. Proxy-Config).
+**Neue Projekte → dort.** Dieses Repo bleibt nur für bestehende Apps (eingefroren).
+
+---
+
 # Capistrano::Nuxt2
 
 Capistrano recipes to deploy nuxt 2 apps.
