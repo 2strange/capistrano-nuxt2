@@ -1,9 +1,11 @@
-# ⚠️ DEPRECATED — ersetzt durch capistrano-recipes4nuxt
+# ✅ AKTIV — Standard für alle Nuxt-Deploys (Stand 2026-06-10)
 
-Dieses Gem wird **nicht mehr weiterentwickelt**. Neuer Standard:
-**[capistrano-recipes4nuxt](https://github.com/2strange/capistrano-recipes4nuxt)**
-(deckt Nuxt 2 **und** 3 ab, passt zum recipes2go-Setup inkl. Proxy-Config).
-**Neue Projekte → dort.** Dieses Repo bleibt nur für bestehende Apps (eingefroren).
+Dieses Gem ist der **verbindliche Standard** für Nuxt-Deploys — für bestehende UND
+neue Projekte. Der designierte Nachfolger
+**[capistrano-recipes4nuxt](https://github.com/2strange/capistrano-recipes4nuxt)** ist
+**WIP und nicht freigegeben**: er wird erst Standard, wenn er **alle** Funktionen dieses
+Gems übernommen hat und per echtem Deploy verifiziert wurde (Austin-Entscheid 2026-06-10).
+Kanonischer Deploy-Ablauf: siehe myTOOLZ `docs/deploy-runbook.md`.
 
 ---
 
