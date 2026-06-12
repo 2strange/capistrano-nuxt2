@@ -1,11 +1,11 @@
-# ✅ AKTIV — Standard für Bestands- und Nuxt-2-Apps (Stand 2026-06-12)
+# ✅ ACTIVE — standard for existing and Nuxt 2 apps (2026-06-12)
 
-Dieses Gem bleibt der **Standard für bestehende und reine Nuxt-2-Apps** — gleichwertig
-aktiv, kein Migrationszwang. Für **neue Nuxt-3-SSR-Projekte** ist der Nachfolger
-**[capistrano-recipes4nuxt](https://github.com/2strange/capistrano-recipes4nuxt)** seit
-**v1.0.0 released** (Nitro-SSR real verifiziert) und dort empfohlen (Austin-Entscheid
-2026-06-12). Umstieg optional: recipes4nuxt `docs/migration-nuxt2-to-nuxt3-ssr.md`.
-Kanonischer Deploy-Ablauf: siehe myTOOLZ `docs/deploy-runbook.md`.
+This gem remains the **standard for existing and pure Nuxt 2 apps** — equally active, no
+forced migration. For **new Nuxt 3 SSR projects** the successor
+**[capistrano-recipes4nuxt](https://github.com/2strange/capistrano-recipes4nuxt)** is
+**released as v1.0.0** (Nitro SSR verified on a real test site) and recommended there.
+Optional migration: recipes4nuxt `docs/migration-nuxt2-to-nuxt3-ssr.md`.
+Canonical deploy sequence: see myTOOLZ `docs/deploy-runbook.md`.
 
 ---
 
