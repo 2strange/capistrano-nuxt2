@@ -1,5 +1,5 @@
 module Capistrano
   module Nuxt2
-    VERSION = "0.2.19"  # deprecated — see capistrano-recipes4nuxt
+    VERSION = "0.2.20"
   end
 end
