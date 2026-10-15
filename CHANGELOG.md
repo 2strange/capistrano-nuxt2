@@ -1,5 +1,14 @@
 # Changelog — capistrano-nuxt2
 
+## 0.2.21 — 2026-10-15
+
+**Fix: `certbot_www_domains` erzeugte kaputte certbot-Argumente.**
+
+- **fix (certbot):** In `fetch_certbot_domain_args` fehlte das Leerzeichen vor dem
+  zweiten `-d` → aus `example.com` wurde `-d example.com-d www.example.com`.
+  Betrifft nur Stages mit `set :certbot_www_domains, true`; alle anderen
+  rendern unverändert. (Fund: interview-Bob, 2026-10-15)
+
 ## 0.2.20 — 2026-06-16
 
 **Setup zieht jetzt das SSL-Cert mit — „nach `cap <stage> setup` einfach deployen".**
